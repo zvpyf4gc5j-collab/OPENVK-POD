@@ -1,0 +1,45 @@
+name: Build OpenVK IPA
+
+on:
+workflow_dispatch:
+push:
+branches:
+- main
+
+jobs:
+build:
+runs-on: macos-15
+
+steps:
+- name: Download source
+uses: actions/checkout@v4
+
+- name: Install XcodeGen
+run: brew install xcodegen
+
+- name: Generate Xcode project
+run: xcodegen generate --spec project.yml
+
+- name: Build OpenVK
+run: |
+xcodebuild \
+-project OpenVKPod.xcodeproj \
+-scheme OpenVKPod \
+-configuration Release \
+-sdk iphoneos \
+-derivedDataPath build \
+CODE_SIGNING_ALLOWED=NO \
+CODE_SIGNING_REQUIRED=NO \
+build
+
+- name: Create IPA
+run: |
+mkdir Payload
+cp -R build/Build/Products/Release-iphoneos/*.app Payload/
+zip -r OpenVK.ipa Payload
+
+- name: Upload IPA
+uses: actions/upload-artifact@v4
+with:
+name: OpenVK-IPA
+path: OpenVK.ipa
