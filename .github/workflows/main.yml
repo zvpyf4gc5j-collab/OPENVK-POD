@@ -1,0 +1,18 @@
+name: Build IPA
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install xcodegen
+      - run: xcodegen generate
+      - run: xcodebuild -project OpenVKPod.xcodeproj -scheme OpenVKPod -configuration Release -sdk iphoneos -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY="" build
+      - run: |
+          mkdir Payload
+          cp -R build/Build/Products/Release-iphoneos/OpenVKPod.app Payload/
+          zip -r OpenVKPod.ipa Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: OpenVKPod-ipa
+          path: OpenVKPod.ipa
