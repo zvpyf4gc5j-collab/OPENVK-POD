@@ -1,0 +1,26 @@
+name: OpenVKPod
+options:
+  bundleIdPrefix: com.openvkpod
+  deploymentTarget:
+    iOS: "16.0"
+targets:
+  OpenVKPod:
+    type: application
+    platform: iOS
+    sources: [Sources, Assets.xcassets]
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: OpenVK Pod
+        UIBackgroundModes: [audio]
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: true
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.openvkpod.app
+        PRODUCT_NAME: OpenVKPod
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
